@@ -38,6 +38,14 @@ def register(group):
     required=True,
 )
 @click.option(
+    "ingestion_function",
+    "--ingestion-function",
+    "-i",
+    help="AWS Lambda ingestion log function name",
+    metavar="<Lambda Pyhsical ID>",
+    multiple=False,
+)
+@click.option(
     "excludes",
     "--exclude",
     "-e",
@@ -68,9 +76,11 @@ def install(**kwargs):
 
     functions = get_aliased_functions(input)
 
+    ingestion_function_name = input.ingestion_function or "newrelic-log-ingestion"
+
     with ThreadPoolExecutor() as executor:
         futures = [
-            executor.submit(subscriptions.create_log_subscription, input, function)
+            executor.submit(subscriptions.create_log_subscription, input, function, ingestion_function_name)
             for function in functions
         ]
         install_success = all(future.result() for future in as_completed(futures))

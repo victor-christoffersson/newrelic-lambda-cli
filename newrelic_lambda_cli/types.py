@@ -80,6 +80,7 @@ SUBSCRIPTION_INSTALL_KEYS = [
     "aws_region",
     "aws_permissions_check",
     "functions",
+    "ingestion_function",
     "excludes",
     "filter_pattern",
 ]
